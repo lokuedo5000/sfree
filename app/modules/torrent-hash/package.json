@@ -1,0 +1,12 @@
+{
+  "name": "torrent-hash",
+  "version": "1.0.0",
+  "description": "descarga los torrents por medio del infoHash",
+  "main": "torrenthash.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Lwte",
+  "license": "ISC"
+}

@@ -1,0 +1,26 @@
+{
+  "name": "sfree",
+  "title": "SFree Games",
+  "version": "1.0.0",
+  "icono": "/icon.svg",
+  "server": {
+    "homepage": "/update",
+    "port": 3070,
+    "host": "http://localhost",
+    "pathviews": "app/views",
+    "pathpublic": "app/public"
+  },
+  "description": "Descarga tus juegos gratis.",
+  "tags": "Downloads, Games, Torrents",
+  "main": "sfree.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lokuedo5000/sfree.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "@SFree",
+  "license": "ISC"
+}

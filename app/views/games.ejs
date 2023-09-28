@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SFree | Inicio</title>
+
+    <!-- Iconos -->
+    <link rel="stylesheet" href="/lib/icomoon/icomoon.css">
+
+    <!-- Roboto -->
+    <link rel="stylesheet" href="/lib/roboto/roboto.css">
+
+    <!-- Materializecss -->
+    <link rel="stylesheet" href="/lib/materialize/css/materialize.min.css">
+
+    <!-- app css -->
+    <link rel="stylesheet" href="/css/sfree.css">
+</head>
+
+<body>
+
+    <!-- Menu -->
+    <%- include('../include/menu.ejs') %>
+
+        <div class="body">
+            <div class="container h100">
+                <div class="views-list h100">
+                    <div class="view-right">
+                        <div class="view-container" id="list-arts">
+                            <% for( let a=0; a < 10; a++ ) { %>
+                                <div class="view-col">
+                                    <div class="view-container-body">
+                                        <div class="view-icono">
+                                            <div class="is_ratings">
+                                                <div class="is_active"></div>
+                                                <div class="is_text">Exceptional</div>
+                                            </div>
+                                            
+                                            <div class="art-ratings-progress indigo lighten-5">
+                                                <div class="by_info">rawg.io</div>
+                                                <div class="progress-ratings exceptional-progress green darken-2"></div>
+                                                <div class="progress-ratings recommended-progress light-blue darken-4"></div>
+                                                <div class="progress-ratings meh-progress orange darken-2"></div>
+                                                <div class="progress-ratings skip-progress red accent-3"></div>
+                                            </div>
+                                        </div>
+                                        <div class="name-data">Nombre Articulo</div>
+                                    </div>
+                                </div>
+                                <% } %>
+                        </div>
+                        <div class="center">
+                            <ul class="pagination" id="pagination-home"></ul>
+                        </div>
+                    </div>
+                    <div class="view-left">
+                        <div class="sprt">
+                            <div class="tags-genres z-depth-1">
+                                <div class="header-title">Generos</div>
+                                <div class="tags-list" id="genres-scroll-infinite"></div>
+                            </div>
+                        </div>
+
+                        <div class="sprt">
+                            <div class="tags-genres z-depth-1">
+                                <div class="header-title">Tags</div>
+                                <div class="tags-list" id="tags-scroll-infinite"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+
+        <!-- jquery -->
+        <script src="/lib/jQuery/jquery.min.js"></script>
+        <!-- materialize -->
+        <script src="/lib/materialize/js/materialize.min.js"></script>
+        <script src="/lib/materialize/js/init.js"></script>
+
+        <!-- progressbar -->
+        <script src="/lib/progressbar/progressbar.min.js"></script>
+
+        <!-- pagination -->
+        <script src="/lib/paginations/pagination.min.js"></script>
+
+        <!-- infiniteScroll -->
+        <script src="/js/infinitescroll.js"></script>
+
+        <!-- util codes -->
+        <script src="/js/code.util.kit.js"></script>
+
+        <!-- App -->
+        <script src="/js/sfree.js"></script>
+
+
+
+</body>
+
+</html>

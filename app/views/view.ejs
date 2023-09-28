@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= view.name %> - SFree
+  </title>
+
+  <!-- Iconos -->
+  <link rel="stylesheet" href="/lib/icomoon/icomoon.css">
+
+  <!-- Roboto -->
+  <link rel="stylesheet" href="/lib/roboto/roboto.css">
+
+  <!-- Materializecss -->
+  <link rel="stylesheet" href="/lib/materialize/css/materialize.min.css">
+
+  <!-- Owl -->
+  <link rel="stylesheet" href="/lib/owl/assets/owl.carousel.min.css">
+  <link rel="stylesheet" href="/lib/owl/assets/owl.theme.default.min.css">
+
+  <!-- app css -->
+  <link rel="stylesheet" href="/css/sfree.css">
+
+</head>
+
+<body>
+
+  <!-- Menu -->
+  <%- include('../include/menu.ejs') %>
+
+    <div class="body page-view-show" style='background-image: url(/downloads/banners/banner_<%=filename%>.jpg);'>
+      <div class="blur-div"></div>
+      <img src="/downloads/banners/banner_<%=filename%>.jpg" class="d-none" id="banner-dominantes">
+      <div class="container h100 page-view z-depth-2">
+        <div class="banner-view sprt2 z-depth-2"
+          style='background-image: url(/downloads/banners/banner_<%=filename%>.jpg);'>
+
+        </div>
+
+        <div class="hab-container sprt2">
+          <div class="row">
+            <div class="col s12 m8 l9">
+              <div class="pag-info">
+                <div class="sprt2">
+                  <div class="title-art-select">
+                    Tags
+                  </div>
+                  <div class="tags-list">
+                    
+                    <% let genres_tags = [...info.rawg.genres, ...info.rawg.tags]; %>
+                    <% for( let tg = 0; tg < genres_tags.length; tg++ ) { %>
+                      <li><a href="/games?tag=<%= genres_tags[tg].slug.replace(/\s+/g, "-").replace(/ñ/g, "-ene-").toLowerCase() %>"><%= genres_tags[tg].name %></a></li>
+                    <% } %>
+
+                    
+                  </div>
+                </div>
+                <div class="sprt2">
+                  <div class="title-art-select">
+                    About
+                  </div>
+                  <div class="dcp-art"><%- info.rawg.description %></div>
+                </div>
+
+                <div class="sprt2">
+                  <div class="title-art-select">
+                    Information
+                  </div>
+                  <div class="information-art">
+                    <li>
+                      <span class="title-info">Platforms:</span>
+                      <div class="info-all-div">
+                        <% let platforms = info.rawg.platforms; %>
+                        <% for( let pf = 0; pf < platforms.length; pf++ ) { %>
+                          <a href="#<%= platforms[pf].platform.slug %>"><%= platforms[pf].platform.name %></a>
+                        <% } %> 
+                      </div>
+                    </li>
+                    <li>
+                      <span class="title-info">Developers:</span>
+                      <div class="info-all-div">
+                        <% let developers = info.rawg.developers; %>
+                        <% for( let pf = 0; pf < developers.length; pf++ ) { %>
+                          <a href="#<%= developers[pf].slug %>"><%= developers[pf].name %></a>
+                        <% } %> 
+                      </div>
+                    </li>
+                    <li>
+                      <span class="title-info">Publisher:</span>
+                      <div class="info-all-div">
+                        <% let publishers = info.rawg.publishers; %>
+                        <% for( let pf = 0; pf < publishers.length; pf++ ) { %>
+                          <a href="#<%= publishers[pf].slug %>"><%= publishers[pf].name %></a>
+                        <% } %> 
+                      </div>
+                    </li>
+                    <li>
+                      <span class="title-info">Peso:</span>
+                      <div class="info-all-div">
+                        <a href="#">Search</a>
+                      </div>
+                    </li>
+                  </div>
+                </div>
+
+                <div class="sprt2">
+                  <div class="title-art-select">
+                    PC Requirements
+                  </div>
+                  <% 
+                    const resultados = info.rawg.platforms.filter((elemento) => {
+                        return elemento.platform.slug === "pc";
+                    });
+                  %>
+                  <div class="requisitos-art">
+                    <div class="requirements-text pre-line-js sprt2">
+                      <% if (resultados[0].requirements.minimum) { %>
+                        <%- resultados[0].requirements.minimum %>
+                      <% } %>
+                    </div>
+                    <div class="requirements-text pre-line-js sprt2">
+                      <% if (resultados[0].requirements.recommended) { %>
+                        <%- resultados[0].requirements.recommended %>
+                      <% } %>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- <div class="hab-container">
+                <div class="row">
+                  <div class="col s12 m4 l3">
+                    <div class="btn">Recommended</div>
+                  </div>
+                  <div class="col s12 m4 l3 red">V</div>
+                  <div class="col s12 m4 l3 red">V</div>
+                  <div class="col s12 m4 l3 red">V</div>
+                </div>
+              </div> -->
+              </div>
+            </div>
+            <div class="col s12 m4 l3">
+              <div class="scores sprt2">
+                <div class="title-art-select">
+                  Tags
+                </div>
+                <div class="scores-list">
+                  <% let scores=[...info.rawg.ratings]; // Luego, ordenemos el array por el campo "titulo"
+                    scores.sort((a, b)=> {
+                    const tituloA = a.title.toUpperCase();
+                    const tituloB = b.title.toUpperCase();
+                    if (tituloA < tituloB) { return -1; } if (tituloA> tituloB) {
+                      return 1;
+                      }
+                      return 0;
+                      });
+                      %>
+                    <% for( let s=0; s < scores.length || 0; s++ ) { %>
+                    <div class="sprt-score">
+                      <div class="score-title">
+                        <%= scores[s].title %>
+                      </div>
+                      <div class="container-progress" data-percent="<%= scores[s].percent %>" data-name="<%= scores[s].title %>"></div>
+                    </div>
+                    <% } %>
+                </div>
+              </div>
+              <div class="elm-select sprt2">
+                <div class="title-art-select">
+                  Get it Now
+                </div>
+                <div class="elm-flex-wrap">
+                    <%
+                      const url_file = `#ajax_toast_qs=(name=torrent)(value=${view.hash})&(name=name)(value=${view.name})&(name=url)(value=auto)&(name=magnet)(value=${view.magnet})&(name=path)(value=/infohash)&(name=toast)(value=Downloading torrent of the '${view.name}' game)`;
+                      let stores = info.rawg.stores;
+                      let sts = [...stores, ...[{id: "torrent", store: {name: "Torrent", domain: url_file}}]];
+                    %>
+                    <% for( let st = 0; st < sts.length; st++ ) { %>
+                      <div class="stores-item">
+                        <% if (sts[st].id == "torrent") { %>
+                          <a class="stores-info" href="#ajax_toast_<%= sts[st].store.domain %>">
+                            <%= sts[st].store.name %>
+                          </a>
+                         <% } else { %>
+                          <a class="stores-info" href="#url-https://<%= sts[st].store.domain %>">
+                            <%= sts[st].store.name %>
+                          </a>
+                        <% } %>
+                        
+                      </div>
+                    <% } %>
+                  
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+
+    <!-- jquery -->
+    <script src="/lib/jQuery/jquery.min.js"></script>
+    <!-- materialize -->
+    <script src="/lib/materialize/js/materialize.min.js"></script>
+    <script src="/lib/materialize/js/init.js"></script>
+
+    <!-- progressbar -->
+    <script src="/lib/progressbar/progressbar.min.js"></script>
+    <script src="/js/cache.js"></script>
+
+    <!-- color thief -->
+    <script src="/lib/color-thief/color-thief.umd.js"></script>
+
+    <!-- Owl -->
+    <script src="/lib/owl/owl.carousel.min.js"></script>
+    <script src="/js/owl.js"></script>
+
+    <!-- pagination -->
+    <script src="/lib/paginations/pagination.min.js"></script>
+
+    <!-- infiniteScroll -->
+    <script src="/js/infinitescroll.js"></script>
+
+    <!-- util codes -->
+    <script src="/js/code.util.kit.js"></script>
+
+    <!-- App -->
+    <script src="/js/sfree.js"></script>
+
+
+
+</body>
+
+</html>

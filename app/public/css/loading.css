@@ -1,0 +1,58 @@
+html,body{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+body{
+    background-color: #eee;
+}
+
+.loading-app{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-page{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(238, 238, 238);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.loading-info{
+    text-align: center;
+}
+.logo-6 h3 {
+    color: #d81b60;
+    font-family: "Roboto";
+    font-weight: 300;
+    font-size: 30px;
+    line-height:1.3;
+}
+.logo-6 h3 span {
+    background: #d81b60;
+    color: #fff;
+    display: inline-block;
+    line-height: 1.8;
+    padding: 0 16px;
+    border-radius: 4px;
+}
+.precarga{
+    width: 70px;
+    height: 70px;
+    text-align: center;
+    margin: auto;
+}
+.precarga-download{
+    width: 100%;
+    display: none;
+}
