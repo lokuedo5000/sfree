@@ -197,7 +197,7 @@ const routes = [
         handler: (req, res) => {
             let qs = req.query;
             if (qs.active) {
-                console.log("finalizar procesos");
+                // console.log("finalizar procesos");
             }
 
             res.end();
