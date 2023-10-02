@@ -218,7 +218,7 @@ kit.onDOMReady(async () => {
         carouselItems.innerHTML = "";
         for (const item of getGames) {
             carouselItems.innerHTML += `<div class="carousel-item brown lighten-4 white-text df-center-x app-x-banner"
-                                            style="background-image: url(/downloads/banners/banner_${clearSymbols(item.name, "namefile")}.jpg);" href="#${clearSymbols(item.name, "namefile")}!">
+                                            style="background-image: url(/img-appdata/downloads/banners/banner_${clearSymbols(item.name, "namefile")}.jpg);" href="#${clearSymbols(item.name, "namefile")}!">
                                         </div>`;
         }
 
@@ -239,10 +239,10 @@ kit.onDOMReady(async () => {
         let estr = parseInt(0);
         let etr = kit.qsSelector(false, ".owl-estrenos");
         for (const estreno of all) {
-            let info = await _ajax(`/json/save/${clearSymbols(estreno.name, "namefile")}.json`, "GET");
+            let info = await _ajax(`/img-appdata/json/save/${clearSymbols(estreno.name, "namefile")}.json`, "GET");
             if (veryDatePremiere(fechaActual, info.rawg.releaseDate)) {
                 etr.innerHTML += `<div class="item">
-                                    <div class="cover-art" style="background-image: url(/downloads/banners/banner_${clearSymbols(estreno.name, "namefile")}.jpg)">
+                                    <div class="cover-art" style="background-image: url(/img-appdata/downloads/banners/banner_${clearSymbols(estreno.name, "namefile")}.jpg)">
                                     <div class="by_info_home orange darken-3">Estreno</div>
                                     <a href="/view?where=${estreno.hash}" class="name-art">${estreno.name}</a>
                                     </div>
@@ -264,7 +264,7 @@ kit.onDOMReady(async () => {
         let rem = kit.qsSelector(false, ".owl-recomendados");
 
         for (const excelente of all) {
-            let info = await _ajax(`/json/save/${clearSymbols(excelente.name, "namefile")}.json`, "GET");
+            let info = await _ajax(`/img-appdata/json/save/${clearSymbols(excelente.name, "namefile")}.json`, "GET");
             let exceptional = _search(info.rawg.ratings, "title", "exceptional")[0] || { "percent": 0 };
             let recommended = _search(info.rawg.ratings, "title", "recommended")[0] || { "percent": 0 };
             let meh = _search(info.rawg.ratings, "title", "meh")[0] || { "percent": 0 };
@@ -293,7 +293,7 @@ kit.onDOMReady(async () => {
 
             if (maxRating.category == "exceptional") {
                 exl.innerHTML += `<div class="item">
-                                       <div class="cover-art" style="background-image: url(/downloads/banners/banner_${clearSymbols(excelente.name, "namefile")}.jpg)">
+                                       <div class="cover-art" style="background-image: url(/img-appdata/downloads/banners/banner_${clearSymbols(excelente.name, "namefile")}.jpg)">
                                        <div class="by_info_home ${remText(maxRating.category, thecolors)}">${remText(maxRating.category, replacements)}</div>
                                        <a href="/view?where=${excelente.hash}" class="name-art">${excelente.name}</a>
                                        </div>
@@ -303,7 +303,7 @@ kit.onDOMReady(async () => {
 
             if (maxRating.category == "recommended") {
                 rem.innerHTML += `<div class="item">
-                                       <div class="cover-art" style="background-image: url(/downloads/banners/banner_${clearSymbols(excelente.name, "namefile")}.jpg)">
+                                       <div class="cover-art" style="background-image: url(/img-appdata/downloads/banners/banner_${clearSymbols(excelente.name, "namefile")}.jpg)">
                                        <div class="by_info_home ${remText(maxRating.category, thecolors)}">${remText(maxRating.category, replacements)}</div>
                                        <a href="/view?where=${excelente.hash}" class="name-art">${excelente.name}</a>
                                        </div>
@@ -351,7 +351,7 @@ kit.onDOMReady(async () => {
 
             for (const item of data) {
 
-                let getInfo = await _ajax(`/json/save/${clearSymbols(item.name, "namefile")}.json`, "GET");
+                let getInfo = await _ajax(`/img-appdata/json/save/${clearSymbols(item.name, "namefile")}.json`, "GET");
 
                 let exceptional = _search(getInfo.rawg.ratings, "title", "exceptional")[0] || { "percent": 0 };
                 let recommended = _search(getInfo.rawg.ratings, "title", "recommended")[0] || { "percent": 0 };
@@ -396,7 +396,7 @@ kit.onDOMReady(async () => {
 
                 dataContainer.innerHTML += `<div class="view-col">
                                         <div class="view-container-body z-depth-2">
-                                            <div class="view-icono" style="background-image: url(/downloads/banners/banner_${clearSymbols(item.name, "namefile")}.jpg)">
+                                            <div class="view-icono" style="background-image: url(/img-appdata/downloads/banners/banner_${clearSymbols(item.name, "namefile")}.jpg)">
                                             <div class="is_ratings">
                                                 <div class="is_active"></div>
                                                 <div class="is_text ${remText(maxRating.title, thecolors)}">${remText(maxRating.title, replacements)}</div>
