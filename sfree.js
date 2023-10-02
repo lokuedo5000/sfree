@@ -44,11 +44,13 @@ const lib = require("../modules/util-libraries");
 
 // AppData
 const appdata = path.normalize(app.getPath('appData'));
+const pathAppData = path.join(appdata, pakContainer.name, "apps", pakApp.name);
 
 async function setFolders() {
     await utilnode.createFolderRecursive(appdata, `${pakContainer.name}/apps/${pakApp.name}/downloads/banners`);
     await utilnode.createFolderRecursive(appdata, `${pakContainer.name}/apps/${pakApp.name}/db`);
     await utilnode.createFolderRecursive(appdata, `${pakContainer.name}/apps/${pakApp.name}/json/save`);
+    await utilnode.createFolderRecursive(appdata, `${pakContainer.name}/apps/${pakApp.name}/temp`);
 }
 
 // download info
@@ -58,13 +60,13 @@ async function doFiles() {
         let articles = await utilnode.getTable("articles", "games", ["id"]);
         for (const item of articles) {
             const namefile = utilnode.clearSymbols(item.name, "namefile");
-            const pathfile = path.join(appdata, pakContainer.name, "apps", pakApp.name, "json", "save", `${namefile}.json`);
+            const pathfile = path.join(pathAppData, "json", "save", `${namefile}.json`);
 
             if (!fs.existsSync(pathfile)) {
                 await newinfo.downloadWikiRawg(item.hash, {
                     wikiID: item.apiwiki,
                     rawgID: item.apirawg,
-                    nameImg: path.join(appdata, pakContainer.name, "apps", pakApp.name, "downloads", "banners", `banner_${namefile}.jpg`),
+                    nameImg: path.join(pathAppData, "downloads", "banners", `banner_${namefile}.jpg`),
                     nameJson: pathfile
                 });
             }
@@ -100,7 +102,7 @@ const routes = [
             // get info
             const namefile = utilnode.clearSymbols(view[0].name, "namefile");
 
-            let info = utilnode.fsSystem("read", appdata, pakContainer.name, "apps", pakApp.name, "json", "save", `${namefile}.json`);
+            let info = utilnode.fsSystem("read", pathAppData, "json", "save", `${namefile}.json`);
             const infoParse = JSON.parse(info);
             // render
             res.render(path.join(__dirname, "app", "views", "view"), {
@@ -118,16 +120,16 @@ const routes = [
                 await setFolders();
                 await downloadsfiles.download({
                     url: "https://lokuedo5000.github.io/lwte/sfree/sfree_info.zip",
-                    outputDirectory: path.join(__dirname, "app", "temp")
+                    outputDirectory: path.join(pathAppData, "temp")
                 });
 
                 await zipex.extractZip({
-                    zipFilePath: path.join(__dirname, "app", "temp", "sfree_info.zip"),
-                    extractPath: path.join(appdata, pakContainer.name, "apps", pakApp.name, "db")
+                    zipFilePath: path.join(pathAppData, "temp", "sfree_info.zip"),
+                    extractPath: path.join(pathAppData, "db")
                 });
 
                 // open db
-                await db.db("articles", path.join(appdata, pakContainer.name, "apps", pakApp.name, "db", "articles.lw"));
+                await db.db("articles", path.join(pathAppData, "db", "articles.lw"));
 
                 // getAll DB
                 let articles = await utilnode.getTable("articles", "games", ["id"]);
@@ -135,7 +137,7 @@ const routes = [
                 // Utiliza Promise.all para mapear las promesas
                 const promises = articles.map(async (item) => {
                     const namefile = utilnode.clearSymbols(item.name, "namefile");
-                    const pathfile = path.join(appdata, pakContainer.name, "apps", pakApp.name, "json", "save", `${namefile}.json`);
+                    const pathfile = path.join(pathAppData, "json", "save", `${namefile}.json`);
 
                     if (!fs.existsSync(pathfile)) {
                         newinfo.addCountFile(1);
@@ -283,7 +285,7 @@ const routes = [
         method: 'post',
         path: '/all-json',
         handler: async (req, res) => {
-            let jsonall = lw.allFileJson(path.join(appdata, pakContainer.name, "apps", pakApp.name, "json", "save"));
+            let jsonall = lw.allFileJson(path.join(pathAppData, "json", "save"));
             res.send(JSON.stringify(jsonall));
         }
     },
@@ -291,7 +293,7 @@ const routes = [
         method: 'post',
         path: '/tagsandgenres',
         handler: async (req, res) => {
-            let jsonall = lw.allFileJson(path.join(appdata, pakContainer.name, "apps", pakApp.name, "json", "save"));
+            let jsonall = lw.allFileJson(path.join(pathAppData, "json", "save"));
             res.send(lw.exArray(jsonall, ["genres", "tags"]));
         }
     },
@@ -316,7 +318,7 @@ const routes = [
 
             const contentType = contentTypes[extName] || "text/html";
             res.writeHead(200, { "Content-Type": contentType });
-            const nameFile = path.join(appdata, pakContainer.name, "apps", pakApp.name, req.params[0]);
+            const nameFile = path.join(pathAppData, req.params[0]);
             const readStream = fs.createReadStream(nameFile);
             readStream.pipe(res);
         }
