@@ -9,7 +9,9 @@ const lw = new LW();
 const ImgminifyDown = require("imgminify-down");
 const imgminifydown = new ImgminifyDown();
 
-
+// package
+let pakContainer = require("../../../package.json");
+let pakApp = require("./package.json");
 
 // Torrent Hash
 const TorrentHash = require("./app/modules/torrent-hash");
@@ -40,6 +42,15 @@ const newinfo = new NewSave();
 // libraries
 const lib = require("../modules/util-libraries");
 
+// AppData
+const appdata = path.normalize(app.getPath('appData'));
+
+async function setFolders() {
+    await utilnode.createFolderRecursive(appdata, `${pakContainer.name}/apps/${pakApp.name}/downloads/banners`);
+    await utilnode.createFolderRecursive(appdata, `${pakContainer.name}/apps/${pakApp.name}/db`);
+    await utilnode.createFolderRecursive(appdata, `${pakContainer.name}/apps/${pakApp.name}/json/save`);
+}
+
 // download info
 async function doFiles() {
     if (newinfo.fileall > 0) {
@@ -47,48 +58,19 @@ async function doFiles() {
         let articles = await utilnode.getTable("articles", "games", ["id"]);
         for (const item of articles) {
             const namefile = utilnode.clearSymbols(item.name, "namefile");
-            const pathfile = path.join(__dirname, "app", "public", "json", "save", `${namefile}.json`);
+            const pathfile = path.join(appdata, pakContainer.name, "apps", pakApp.name, "json", "save", `${namefile}.json`);
 
             if (!fs.existsSync(pathfile)) {
                 await newinfo.downloadWikiRawg(item.hash, {
                     wikiID: item.apiwiki,
                     rawgID: item.apirawg,
-                    nameImg: path.join(__dirname, "app", "public", "downloads", "banners", `banner_${namefile}.jpg`),
+                    nameImg: path.join(appdata, pakContainer.name, "apps", pakApp.name, "downloads", "banners", `banner_${namefile}.jpg`),
                     nameJson: pathfile
                 });
             }
 
         }
     }
-}
-
-async function setFolders() {
-    await utilnode.veryFolderAndCrator([
-        {
-            name: "db",
-            path: path.join(__dirname, "app")
-        },
-        {
-            name: "temp",
-            path: path.join(__dirname, "app")
-        },
-        {
-            name: "downloads",
-            path: path.join(__dirname, "app", "public")
-        },
-        {
-            name: "banners",
-            path: path.join(__dirname, "app", "public", "downloads")
-        },
-        {
-            name: "json",
-            path: path.join(__dirname, "app", "public")
-        },
-        {
-            name: "save",
-            path: path.join(__dirname, "app", "public", "json")
-        }
-    ]);
 }
 
 const routes = [
@@ -118,7 +100,7 @@ const routes = [
             // get info
             const namefile = utilnode.clearSymbols(view[0].name, "namefile");
 
-            let info = utilnode.fsSystem("read", __dirname, "app", "public", "json", "save", `${namefile}.json`);
+            let info = utilnode.fsSystem("read", appdata, pakContainer.name, "apps", pakApp.name, "json", "save", `${namefile}.json`);
             const infoParse = JSON.parse(info);
             // render
             res.render(path.join(__dirname, "app", "views", "view"), {
@@ -141,11 +123,11 @@ const routes = [
 
                 await zipex.extractZip({
                     zipFilePath: path.join(__dirname, "app", "temp", "sfree_info.zip"),
-                    extractPath: path.join(__dirname, "app", "db")
+                    extractPath: path.join(appdata, pakContainer.name, "apps", pakApp.name, "db")
                 });
 
                 // open db
-                await db.db("articles", path.join(__dirname, "app", "db", "articles.lw"));
+                await db.db("articles", path.join(appdata, pakContainer.name, "apps", pakApp.name, "db", "articles.lw"));
 
                 // getAll DB
                 let articles = await utilnode.getTable("articles", "games", ["id"]);
@@ -153,7 +135,7 @@ const routes = [
                 // Utiliza Promise.all para mapear las promesas
                 const promises = articles.map(async (item) => {
                     const namefile = utilnode.clearSymbols(item.name, "namefile");
-                    const pathfile = path.join(__dirname, "app", "public", "json", "save", `${namefile}.json`);
+                    const pathfile = path.join(appdata, pakContainer.name, "apps", pakApp.name, "json", "save", `${namefile}.json`);
 
                     if (!fs.existsSync(pathfile)) {
                         newinfo.addCountFile(1);
@@ -299,79 +281,9 @@ const routes = [
     },
     {
         method: 'post',
-        path: '/save/:method',
-        handler: async (req, res) => {
-            try {
-
-                const { json, jsonPath, name = false } = req.body;
-
-
-                if (req.params.method === "json") {
-
-                    await fs.promises.writeFile(path.join(__dirname, jsonPath), JSON.stringify(json, null, 2));
-
-
-                    res.send(true);
-                } else if (req.params.method === "jsonnoexist") {
-
-                    if (name) {
-
-                        await lw.json("saveStringify", json, __dirname, jsonPath);
-
-                        res.send(true);
-                    } else {
-                        res.send(false);
-                    }
-                } else if (req.params.method === "jsonco") {
-
-                    if (name) {
-                        let pk = await lw.json("read", null, __dirname, "app", "public", "json", "rawg.json");
-                        pk[name] = json;
-                        await lw.json("save", pk, __dirname, "app", "public", "json", "rawg.json");
-                        res.send(true);
-                    } else {
-                        res.send(false);
-                    }
-                } else {
-
-                    res.status(400).send("Método no válido");
-                }
-            } catch (error) {
-                // Manejar errores
-                console.error(error);
-                res.status(500).send("Error al guardar los datos en el archivo JSON");
-            }
-        }
-    },
-    {
-        method: 'post',
-        path: '/download/:method',
-        handler: async (req, res) => {
-            // body
-            let body = req.body;
-            // open
-            let pk = await lw.json("read", null, __dirname, "package.json");
-            const nameFolder = path.dirname(__dirname);
-            const nameFile = path.join(nameFolder, pk.name, "app", "public", "downloads", "banners", body.banner);
-
-            if (req.params.method == "download") {
-
-                const save = await imgminifydown.download("download", {
-                    url: body.urlBanner,
-                    dest: nameFile,
-                    optimize: true, // Puedes establecer esto en true o false según tus necesidades
-                });
-
-                res.send({ resp: save });
-            }
-
-        }
-    },
-    {
-        method: 'post',
         path: '/all-json',
         handler: async (req, res) => {
-            let jsonall = lw.allFileJson(path.join(__dirname, "app", "public", "json", "save"));
+            let jsonall = lw.allFileJson(path.join(appdata, pakContainer.name, "apps", pakApp.name, "json", "save"));
             res.send(JSON.stringify(jsonall));
         }
     },
@@ -379,17 +291,40 @@ const routes = [
         method: 'post',
         path: '/tagsandgenres',
         handler: async (req, res) => {
-            let jsonall = lw.allFileJson(path.join(__dirname, "app", "public", "json", "save"));
+            let jsonall = lw.allFileJson(path.join(appdata, pakContainer.name, "apps", pakApp.name, "json", "save"));
             res.send(lw.exArray(jsonall, ["genres", "tags"]));
+        }
+    },
+    {
+        method: 'get',
+        path: '/img-appdata/*',
+        handler: async (req, res) => {
+            let qs = req.query;
+
+            const extName = path.extname(req.params[0]);
+            const contentTypes = {
+                ".css": "text/css",
+                ".js": "text/javascript",
+                ".json": "application/json",
+                ".png": "image/png",
+                ".ico": "image/x-icon",
+                ".jpg": "image/jpeg",
+                ".svg": "image/svg+xml",
+                ".mp3": "audio/mpeg",
+                ".mp4": "video/mp4",
+            };
+
+            const contentType = contentTypes[extName] || "text/html";
+            res.writeHead(200, { "Content-Type": contentType });
+            const nameFile = path.join(appdata, pakContainer.name, "apps", pakApp.name, req.params[0]);
+            const readStream = fs.createReadStream(nameFile);
+            readStream.pipe(res);
         }
     },
     {
         method: 'get',
         path: '/file/*',
         handler: async (req, res) => {
-            //   let referer = req.headers.referer || req.headers.referrer;
-            //   let ar = referer.split("/");
-
             const extName = path.extname(req.params[0]);
 
             // Tipos de contenido
